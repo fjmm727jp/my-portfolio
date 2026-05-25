@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Designer Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons (CSS version for better compatibility) -->
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/duotone/style.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        light: {
+                            bg: '#FFFDF7',
+                            text: '#1F2937',
+                            accent: '#FFB703',
+                            sub: '#FB8500',
+                        },
+                        dark: {
+                            bg: '#1A1A1A',
+                            text: '#FAFAFA',
+                            accent: '#FFD166',
+                            sub: '#FF8C42',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '"Zen Kaku Gothic New"', 'sans-serif'],
+                        heading: ['Poppins', '"Noto Sans JP"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
+                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* スクロールアニメーション用クラス */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        
+        /* 基本のスクロールバーなどを隠す場合 */
+        body {
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="antialiased relative bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text transition-colors duration-500 selection:bg-light-accent selection:text-white dark:selection:bg-dark-accent dark:selection:text-dark-bg">
+
+    <!-- Background Decor -->
+    <div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-light-accent/10 dark:bg-dark-accent/10 mix-blend-multiply dark:mix-blend-lighten filter blur-[80px] opacity-70 animate-float z-[-1] pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-light-sub/10 dark:bg-dark-sub/10 mix-blend-multiply dark:mix-blend-lighten filter blur-[100px] opacity-70 animate-float-delayed z-[-1] pointer-events-none"></div>
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 w-full z-50 bg-light-bg/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-200/50 dark:border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
+            <a href="#" class="font-heading font-bold text-2xl tracking-wider text-light-accent dark:text-dark-accent flex items-center gap-2">
+                <i class="ph-fill ph-asterisk text-3xl"></i>
+                <span class="text-light-text dark:text-dark-text">Portfolio.</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8 font-medium">
+                <a href="#about" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors">About</a>
+                <a href="#skill" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors">Skill</a>
+                <a href="#works" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors">Works</a>
+                <a href="#strengths" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors">Strengths</a>
+                <a href="#contact" class="px-5 py-2 rounded-full bg-light-bg dark:bg-dark-bg border-2 border-light-text dark:border-dark-text hover:bg-light-text hover:text-white dark:hover:bg-dark-text dark:hover:text-dark-bg transition-all">Contact</a>
+                
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-2xl hidden dark:block"></i>
+                    <i class="ph ph-sun text-2xl block dark:hidden"></i>
+                </button>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center gap-4 md:hidden">
+                <button id="theme-toggle-mobile" class="p-2 rounded-full" aria-label="Toggle Dark Mode">
+                    <i class="ph ph-moon text-2xl hidden dark:block"></i>
+                    <i class="ph ph-sun text-2xl block dark:hidden"></i>
+                </button>
+                <button id="mobile-menu-btn" class="p-2 text-3xl">
+                    <i class="ph ph-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 bg-light-bg/95 dark:bg-dark-bg/95 backdrop-blur-lg z-40 transform translate-x-full transition-transform duration-300 flex flex-col justify-center items-center gap-8 text-2xl font-heading hidden">
+            <button id="close-menu-btn" class="absolute top-6 right-6 text-4xl p-2">
+                <i class="ph ph-x"></i>
+            </button>
+            <a href="#about" class="mobile-link">About</a>
+            <a href="#skill" class="mobile-link">Skill</a>
+            <a href="#works" class="mobile-link">Works</a>
+            <a href="#strengths" class="mobile-link">Strengths</a>
+            <a href="#contact" class="mobile-link px-8 py-3 rounded-full bg-light-accent dark:bg-dark-accent text-white dark:text-dark-bg font-bold mt-4">Contact</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. Hero Section -->
+        <section id="hero" class="min-h-[100svh] flex flex-col justify-center pt-32 pb-24 md:pt-40 md:pb-32 px-6 md:px-12 max-w-7xl mx-auto relative">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1 flex flex-col items-start gap-6 relative z-10">
+                    <span class="inline-block py-1.5 px-4 rounded-full bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-accent font-bold text-sm tracking-widest uppercase reveal">Web Designer Portfolio</span>
+                    <h1 class="font-heading tracking-tight text-4xl md:text-5xl lg:text-6xl font-bold leading-tight reveal delay-100">
+                        つくるだけじゃない、<br>
+                        <span class="text-light-accent dark:text-dark-accent relative inline-block">
+                            “伝わる”
+                            <svg class="absolute w-full h-3 -bottom-1 left-0 text-light-sub dark:text-dark-sub opacity-50" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="4" fill="none"/></svg>
+                        </span>
+                        <span class="inline-block">デザインを。</span>
+                    </h1>
+                    <p class="text-lg md:text-xl leading-relaxed text-gray-600 dark:text-gray-300 reveal delay-200 max-w-lg mt-4">
+                        Webサイト制作・UIデザイン・フロントエンド実装まで。使いやすさと世界観を両立したデザインを制作しています。
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row items-center gap-6 reveal delay-300 w-full sm:w-auto">
+                        <a href="#works" class="w-full sm:w-auto px-8 py-4 rounded-full bg-light-accent dark:bg-dark-accent text-white dark:text-dark-bg font-bold text-lg hover:shadow-lg hover:bg-light-sub dark:hover:bg-dark-sub transition-all text-center flex items-center justify-center gap-2 group">
+                            Worksを見る
+                            <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                        <div class="flex flex-col text-center sm:text-left">
+                            <span class="font-heading font-bold text-xl">Name. (仮入れ)</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Web Designer / Developer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hero Image/Graphic -->
+                <div class="order-1 lg:order-2 flex justify-center lg:justify-end reveal relative">
+                    <div class="relative w-72 h-72 md:w-[400px] md:h-[400px]">
+                        <div class="absolute inset-0 bg-light-accent dark:bg-dark-accent rounded-[30%_70%_70%_30%/30%_30%_70%_70%] animate-float"></div>
+                        <div class="absolute inset-0 bg-light-sub/60 dark:bg-dark-sub/60 rounded-[70%_30%_30%_70%/70%_70%_30%_30%] animate-float-delayed mix-blend-multiply dark:mix-blend-screen"></div>
+                        <img src="https://placehold.co/600x600/f3f4f6/a1a1aa?text=Your+Photo/Illustration" alt="Hero Image" class="absolute inset-4 object-cover rounded-3xl shadow-xl z-10 grayscale hover:grayscale-0 transition-all duration-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-4 md:bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 animate-bounce">
+                <span class="text-sm font-medium tracking-widest uppercase">Scroll</span>
+                <i class="ph ph-arrow-down text-xl"></i>
+            </div>
+        </section>
+
+        <!-- 2. About Section -->
+        <section id="about" class="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto bg-gray-50/50 dark:bg-white/[0.02]">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading tracking-tight text-light-accent dark:text-dark-accent font-bold text-sm tracking-widest uppercase mb-2">About</h2>
+                <h3 class="font-heading tracking-tight text-3xl md:text-4xl font-bold">デザインと実装、どちらも大切に。</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-12 gap-12 items-start">
+                <div class="md:col-span-5 flex justify-center reveal">
+                    <img src="https://placehold.co/500x600/e5e7eb/9ca3af?text=Profile+Image" alt="Profile" class="w-full max-w-sm rounded-3xl rotate-[-2deg] hover:rotate-0 transition-transform duration-500 shadow-xl">
+                </div>
+                <div class="md:col-span-7 space-y-8 reveal delay-100">
+                    <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 p-8 leading-relaxed text-gray-700 dark:text-gray-300">
+                        <p class="mb-4">
+                            国際観光学部を卒業後、コロナ禍の影響で志望していた観光業界を断念し、自身のキャリアを再考。大手上場企業へ就職し、2年目には本社へ異動。その後、EC事業部のWebデザイナーとして3年間勤務しました。
+                        </p>
+                        <p>
+                            「デザインをメインに、もっとクライアントに寄り添った提案がしたい」「デザインで魅了できるデザイナーになりたい」という強い思いから、Web制作会社へ転職。これまでの経験と持ち前の向上心を最大限に活かし、常にスキルアップを目指しながら、使いやすさと世界観を両立したデザインを追求しています。
+                        </p>
+                    </div>
+                    
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 p-6">
+                            <h4 class="font-heading tracking-tight font-bold flex items-center gap-2 mb-3 text-lg">
+                                <i class="ph-duotone ph-star text-light-accent dark:text-dark-accent text-2xl"></i> 得意領域
+                            </h4>
+                            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li>・UI/UXを考慮したWebデザイン</li>
+                                <li>・動きを取り入れたフロントエンド実装</li>
+                                <li>・ECサイトのビジュアル改善</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 p-6">
+                            <h4 class="font-heading tracking-tight font-bold flex items-center gap-2 mb-3 text-lg">
+                                <i class="ph-duotone ph-heart text-light-sub dark:text-dark-sub text-2xl"></i> 制作スタンス
+                            </h4>
+                            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li>・ユーザーの目的達成を第一に考える</li>
+                                <li>・デザインの意図を論理的に説明する</li>
+                                <li>・細部のあしらいや余白にこだわる</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 p-6 sm:col-span-2">
+                            <h4 class="font-heading tracking-tight font-bold flex items-center gap-2 mb-3 text-lg">
+                                <i class="ph-duotone ph-palette text-pink-500 text-2xl"></i> 好きなデザイン傾向
+                            </h4>
+                            <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <li>・シンプルでありながら遊び心のある「POP」なテイスト</li>
+                                <li>・余白をゆったりと取り、情報を整理したクリーンなレイアウト</li>
+                                <li>・ユーザーの記憶に残るアクセントカラーや心地よいアニメーション</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Skill Section -->
+        <section id="skill" class="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading tracking-tight text-light-accent dark:text-dark-accent font-bold text-sm tracking-widest uppercase mb-2">Skill</h2>
+                <h3 class="font-heading tracking-tight text-3xl md:text-4xl font-bold">できること。</h3>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- HTML -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal">
+                    <div class="w-16 h-16 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-file-html"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">HTML</h4>
+                </div>
+                <!-- CSS -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal delay-100">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-file-css"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">CSS</h4>
+                </div>
+                <!-- JavaScript -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal delay-200">
+                    <div class="w-16 h-16 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-file-code"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">JavaScript</h4>
+                </div>
+                <!-- Figma -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal delay-300">
+                    <div class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-pen-nib"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">Figma</h4>
+                </div>
+                <!-- Canva -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal">
+                    <div class="w-16 h-16 rounded-2xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-paint-brush-broad"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">Canva</h4>
+                </div>
+                <!-- Illustrator -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal delay-100">
+                    <div class="w-16 h-16 rounded-2xl bg-orange-100 text-orange-800 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-bezier-curve"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">Illustrator</h4>
+                </div>
+                <!-- WordPress -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-6 flex flex-col items-center justify-center text-center gap-4 reveal delay-200">
+                    <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-800 flex items-center justify-center text-4xl">
+                        <i class="ph-bold ph-browser"></i>
+                    </div>
+                    <h4 class="font-bold font-heading">WordPress</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Works Section -->
+        <section id="works" class="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto bg-gray-50/50 dark:bg-white/[0.02]">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading tracking-tight text-light-accent dark:text-dark-accent font-bold text-sm tracking-widest uppercase mb-2">Works</h2>
+                <h3 class="font-heading tracking-tight text-3xl md:text-4xl font-bold">つくったもの。</h3>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Work Item 1 -->
+                <article class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col reveal group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="https://placehold.co/600x450/e0e7ff/4338ca?text=Corporate+Site" alt="Work 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-white text-black font-bold rounded-full text-sm">View Details</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h4 class="text-xl font-bold mb-2 font-heading">株式会社〇〇 コーポレートサイト</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">企業の信頼感を高めつつ、親しみやすさも感じられるクリーンなデザインにリニューアルしました。</p>
+                        <div class="space-y-2 text-xs border-t border-gray-100 dark:border-gray-800 pt-4">
+                            <p class="flex items-center gap-2"><i class="ph ph-wrench"></i> <span class="text-gray-500">技術:</span> HTML / CSS / JS / WordPress</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-clock"></i> <span class="text-gray-500">期間:</span> 1.5ヶ月</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-user"></i> <span class="text-gray-500">担当:</span> デザイン全般・コーディング</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Work Item 2 -->
+                <article class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col reveal delay-100 group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="https://placehold.co/600x450/fce7f3/be185d?text=Cafe+Landing+Page" alt="Work 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-white text-black font-bold rounded-full text-sm">View Details</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h4 class="text-xl font-bold mb-2 font-heading">カフェ『〇〇』キャンペーンLP</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">期間限定メニューの魅力を伝えるため、シズル感のある写真配置とポップなあしらいを取り入れました。</p>
+                        <div class="space-y-2 text-xs border-t border-gray-100 dark:border-gray-800 pt-4">
+                            <p class="flex items-center gap-2"><i class="ph ph-wrench"></i> <span class="text-gray-500">技術:</span> Figma / HTML / CSS</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-clock"></i> <span class="text-gray-500">期間:</span> 2週間</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-user"></i> <span class="text-gray-500">担当:</span> ワイヤーフレーム・デザイン</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Work Item 3 -->
+                <article class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col reveal delay-200 group cursor-pointer">
+                    <div class="relative overflow-hidden aspect-[4/3]">
+                        <img src="https://placehold.co/600x450/dcfce7/15803d?text=Apparel+EC+UI" alt="Work 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <span class="px-6 py-2 bg-white text-black font-bold rounded-full text-sm">View Details</span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <h4 class="text-xl font-bold mb-2 font-heading">アパレルECサイト UI改善</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">商品検索から購入までの導線を見直し、離脱率を下げるためのUI設計・デザインを行いました。</p>
+                        <div class="space-y-2 text-xs border-t border-gray-100 dark:border-gray-800 pt-4">
+                            <p class="flex items-center gap-2"><i class="ph ph-wrench"></i> <span class="text-gray-500">技術:</span> Figma / Illustrator</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-clock"></i> <span class="text-gray-500">期間:</span> 3週間</p>
+                            <p class="flex items-center gap-2"><i class="ph ph-user"></i> <span class="text-gray-500">担当:</span> UIデザイン・プロトタイプ作成</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            
+            <div class="mt-12 text-center reveal">
+                <a href="#" class="inline-block px-8 py-3 rounded-full border-2 border-gray-300 dark:border-gray-700 hover:border-light-accent dark:hover:border-dark-accent hover:text-light-accent dark:hover:text-dark-accent transition-colors font-bold text-sm">View More Works</a>
+            </div>
+        </section>
+
+        <!-- 5. Strengths Section -->
+        <section id="strengths" class="py-20 md:py-32 px-6 md:px-12 max-w-7xl mx-auto relative">
+            <div class="absolute right-0 top-20 w-32 h-32 bg-light-accent/20 dark:bg-dark-accent/20 rounded-full blur-2xl z-[-1]"></div>
+            
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-heading tracking-tight text-light-accent dark:text-dark-accent font-bold text-sm tracking-widest uppercase mb-2">Strengths</h2>
+                <h3 class="font-heading tracking-tight text-3xl md:text-4xl font-bold">大切にしていること。</h3>
+            </div>
+            
+            <div class="grid sm:grid-cols-2 gap-6 lg:gap-8">
+                <!-- Strength 1 -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-8 flex gap-6 items-start reveal">
+                    <div class="w-14 h-14 shrink-0 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 flex items-center justify-center text-light-accent dark:text-dark-accent text-2xl">
+                        <i class="ph-duotone ph-eye"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-heading tracking-tight text-xl font-bold mb-2">見やすさ</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">余白の取り方、タイポグラフィ、コントラストを計算し、情報がユーザーの目に自然と飛び込んでくるような、ノイズのないデザインを心がけています。</p>
+                    </div>
+                </div>
+                
+                <!-- Strength 2 -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-8 flex gap-6 items-start reveal delay-100">
+                    <div class="w-14 h-14 shrink-0 rounded-full bg-light-sub/10 dark:bg-dark-sub/10 flex items-center justify-center text-light-sub dark:text-dark-sub text-2xl">
+                        <i class="ph-duotone ph-rocket-launch"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-heading tracking-tight text-xl font-bold mb-2">レスポンス速度</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">見た目の美しさだけでなく、Webサイトとしてのパフォーマンスも重視。軽量で無駄のないコーディングにより、快適なブラウジング体験を提供します。</p>
+                    </div>
+                </div>
+                
+                <!-- Strength 3 -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-8 flex gap-6 items-start reveal">
+                    <div class="w-14 h-14 shrink-0 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 text-2xl">
+                        <i class="ph-duotone ph-map-trifold"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-heading tracking-tight text-xl font-bold mb-2">使いやすい導線設計</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">ユーザーが「次に何をすればいいか」迷わないよう、目的達成までのルートを逆算したUI/UX設計を行います。クリックしやすいボタン配置なども徹底します。</p>
+                    </div>
+                </div>
+                
+                <!-- Strength 4 -->
+                <div class="bg-white dark:bg-white/5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none dark:border dark:border-white/10 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] p-8 flex gap-6 items-start reveal delay-100">
+                    <div class="w-14 h-14 shrink-0 rounded-full bg-green-500/10 flex items-center justify-center text-green-500 text-2xl">
+                        <i class="ph-duotone ph-chats"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-heading tracking-tight text-xl font-bold mb-2">丁寧なコミュニケーション</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">クライアントの想いやビジネスの課題をヒアリングでしっかり汲み取り、ただ作るだけでなく「共に作り上げる」伴走型のコミュニケーションを大切にします。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Contact Section -->
+        <section id="contact" class="py-20 md:py-32 px-6 md:px-12 max-w-5xl mx-4 md:mx-12 lg:mx-auto bg-light-accent/5 dark:bg-dark-accent/10 rounded-[3rem] mb-12 text-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-light-accent/20 dark:bg-dark-accent/20 rounded-full mix-blend-multiply blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-light-sub/20 dark:bg-dark-sub/20 rounded-full mix-blend-multiply blur-3xl transform -translate-x-1/2 translate-y-1/2"></div>
+            
+            <div class="relative z-10 max-w-2xl mx-auto reveal">
+                <div class="w-20 h-20 mx-auto bg-light-accent dark:bg-dark-accent rounded-full flex items-center justify-center text-white dark:text-dark-bg text-3xl mb-6 shadow-lg shadow-light-accent/30 dark:shadow-none">
+                    <i class="ph-fill ph-paper-plane-tilt"></i>
+                </div>
+                <h3 class="font-heading tracking-tight text-3xl md:text-5xl font-bold mb-4 text-center">お気軽にご相談ください。</h3>
+                <p class="text-gray-600 dark:text-gray-300 mb-10 leading-relaxed">
+                    Web制作やデザインのご相談など、<br class="hidden sm:block">
+                    お気軽にお問い合わせください。
+                </p>
+                
+                <form class="space-y-4 text-left max-w-md mx-auto" onsubmit="event.preventDefault(); document.getElementById('success-msg').classList.remove('hidden');">
+                    <div>
+                        <input type="text" placeholder="お名前" required class="w-full px-5 py-3 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent transition-all text-light-text dark:text-dark-text">
+                    </div>
+                    <div>
+                        <input type="email" placeholder="メールアドレス" required class="w-full px-5 py-3 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent transition-all text-light-text dark:text-dark-text">
+                    </div>
+                    <div>
+                        <textarea placeholder="お問い合わせ内容" rows="4" required class="w-full px-5 py-3 rounded-xl bg-white dark:bg-white/5 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent transition-all resize-none text-light-text dark:text-dark-text"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 rounded-xl bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text border-2 border-light-bg dark:border-dark-bg hover:bg-light-accent dark:hover:bg-dark-accent hover:text-white dark:hover:text-dark-bg hover:border-light-accent dark:hover:border-dark-accent transition-all font-bold text-lg flex items-center justify-center gap-2 group">
+                        送信する
+                        <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <p id="success-msg" class="text-green-600 dark:text-green-400 text-sm text-center hidden font-bold mt-2">※これはデモ用のフォームです。</p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-white/5">
+        <div class="flex justify-center gap-6 mb-4 text-2xl">
+            <a href="#" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"><i class="ph-fill ph-twitter-logo"></i></a>
+            <a href="#" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"><i class="ph-fill ph-dribbble-logo"></i></a>
+            <a href="#" class="hover:text-light-accent dark:hover:text-dark-accent transition-colors"><i class="ph-fill ph-github-logo"></i></a>
+        </div>
+        <p>&copy; 2026 Taro Yamada (仮). All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const themeToggleBtns = [document.getElementById('theme-toggle'), document.getElementById('theme-toggle-mobile')];
+            const html = document.documentElement;
+
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+
+            themeToggleBtns.forEach(btn => {
+                if(!btn) return;
+                btn.addEventListener('click', () => {
+                    html.classList.toggle('dark');
+                    if (html.classList.contains('dark')) {
+                        localStorage.theme = 'dark';
+                    } else {
+                        localStorage.theme = 'light';
+                    }
+                });
+            });
+
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+
+            const toggleMenu = () => {
+                const isClosed = mobileMenu.classList.contains('translate-x-full');
+                if (isClosed) {
+                    mobileMenu.classList.remove('hidden');
+                    setTimeout(() => mobileMenu.classList.remove('translate-x-full'), 10);
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    mobileMenu.classList.add('translate-x-full');
+                    setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                    document.body.style.overflow = '';
+                }
+            };
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            closeMenuBtn.addEventListener('click', toggleMenu);
+            
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', toggleMenu);
+            });
+        });
+    </script>
+</body>
+</html>
